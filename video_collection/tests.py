@@ -63,6 +63,9 @@ class TestAddVideos(TestCase):
         self.assertIn('Invalid Youtube URL', message_text)
         self.assertIn('Enter valid data', message_text)
 
+        video_count = Video.objects.count()
+        self.assertEqual(0, video_count)
+
 
 
 class TestVideoList(TestCase):
