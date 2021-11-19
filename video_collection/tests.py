@@ -1,5 +1,6 @@
 from django.test import TestCase
 from django.urls import reverse
+from django.db import IntegrityError
 from .models import Video
 
 class TestHomePage(TestCase):
@@ -116,4 +117,9 @@ class TestVideoSearch(TestCase):
     pass
 
 class TestVideoModel(TestCase):
-    pass
+    
+    def test_dupliacte_video_raises_integrity_error(self):
+        v1 = Video.objects.create(name='ZXY', notes='example', url='https://www.youtube.com/watch?v=124332')
+        with self.assertRaises(IntegrityError):
+            Video.objects.create(name='ZXY', notes='example', url='https://www.youtube.com/watch?v=124332')
+
