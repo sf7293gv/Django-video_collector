@@ -98,6 +98,17 @@ class TestVideoList(TestCase):
 
         self.assertContains(response, '1 video')
         self.assertNotContains(response, '1 videos')
+
+    
+    def test_video_number_message_more_than_one_video(self):
+        v1 = Video.objects.create(name='ZXY', notes='example', url='https://www.youtube.com/watch?v=124')
+        v2 = Video.objects.create(name='aaa', notes='example', url='https://www.youtube.com/watch?v=124332')
+        url = reverse('video_list')
+        response = self.client.get(url)
+
+        self.assertContains(response, '2 videos')
+       
+        
         
 
 
