@@ -69,7 +69,37 @@ class TestAddVideos(TestCase):
 
 
 class TestVideoList(TestCase):
-    pass
+    
+    def test_all_videos_displayed_in_correcr_ordeer(self):
+        v1 = Video.objects.create(name='ZXY', notes='example', url='https://www.youtube.com/watch?v=124')
+        v2 = Video.objects.create(name='abc', notes='example', url='https://www.youtube.com/watch?v=123')
+        v3 = Video.objects.create(name='AAA', notes='example', url='https://www.youtube.com/watch?v=122')
+        v4 = Video.objects.create(name='lmn', notes='example', url='https://www.youtube.com/watch?v=121')
+
+        expected_order = [v3, v2, v4, v1]
+
+        url = reverse('video_list')
+        response = self.client.get(url)
+
+        videos_in_template = list(response.context['videos'])
+
+        self.assertEqual(videos_in_template, expected_order)
+
+    def test_no_video_message(self):
+        url = reverse('video_list')
+        response = self.client.get(url)
+        self.assertContains(response, 'No vids')
+        self.assertEqual(0, len(response.context['videos']))
+
+    def test_video_number_message_one_video(self):
+        v1 = Video.objects.create(name='ZXY', notes='example', url='https://www.youtube.com/watch?v=124')
+        url = reverse('video_list')
+        response = self.client.get(url)
+
+        self.assertContains(response, '1 video')
+        self.assertNotContains(response, '1 videos')
+        
+
 
 class TestVideoSearch(TestCase):
     pass
