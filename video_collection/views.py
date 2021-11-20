@@ -43,3 +43,7 @@ def video_list(request):
 
     # videos = Video.objects.all()
     return render(request, 'video_collection/video_list.html', {'videos': videos, 'search_form': search_form})
+
+def about_video(request):
+    name = 'naaame'
+    return render(request, 'video_collection/about.html', {'name': name})

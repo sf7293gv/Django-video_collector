@@ -12,10 +12,20 @@ class Video(models.Model):
 
     def save(self, *args, **kwargs):
         # extract vid id from youtube url
-        if not self.url.startswith('https://www.youtube.com/watch'):
-            raise ValidationError(f'Not a YouTube url {self.url}')
-            
+        # if not self.url.startswith('https://www.youtube.com/watch'):
+        #     raise ValidationError(f'Not a YouTube url {self.url}')
+
         url_components = parse.urlparse(self.url)
+        if url_components.scheme != 'https':
+            raise ValidationError(f'Not a YouTube url {self.url}')
+        
+        if url_components.netloc != 'www.youtube.com':
+            raise ValidationError(f'Not a YouTube url {self.url}')
+        
+        if url_components.path != '/watch':
+            raise ValidationError(f'Not a YouTube url {self.url}')
+
+
         query_string = url_components.query
         if not query_string:
             raise ValidationError(f'Invalid YouTube url {self.url}')

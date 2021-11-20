@@ -1,3 +1,4 @@
+from django.core.exceptions import ValidationError
 from django.test import TestCase
 from django.urls import reverse
 from django.db import IntegrityError
@@ -118,6 +119,22 @@ class TestVideoSearch(TestCase):
 
 class TestVideoModel(TestCase):
     
+    def test_invalid_url_raises_validation_error(self):
+        invalid_urls = [
+            'https://www.youtube.com/watch',
+            'https://www.youtube.com/watch?',
+            'https://www.youtube.com/watch/some',
+            'https://www.youtube.com/watch?v=',
+            'https://github.com',
+        ]
+
+        for vid_url in invalid_urls:
+            with self.assertRaises(ValidationError):
+                Video.objects.create(name='ex', url=vid_url, notes='ex')
+        
+        self.assertEqual(0, Video.objects.count())
+
+
     def test_dupliacte_video_raises_integrity_error(self):
         v1 = Video.objects.create(name='ZXY', notes='example', url='https://www.youtube.com/watch?v=124332')
         with self.assertRaises(IntegrityError):
