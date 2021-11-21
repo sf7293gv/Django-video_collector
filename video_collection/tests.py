@@ -140,3 +140,29 @@ class TestVideoModel(TestCase):
         with self.assertRaises(IntegrityError):
             Video.objects.create(name='ZXY', notes='example', url='https://www.youtube.com/watch?v=124332')
 
+class TestAbout(TestCase):
+
+    def test_about_page_shows_video_info(self):
+        about_video = {
+            'name': 'discord',
+            'url': 'https://www.youtube.com/watch?v=j9NZf9Wcodk',
+            'notes': 'disc'
+        }
+        url = reverse('add_video')
+        response = self.client.post(url, data=about_video, follow=True)
+
+        self.assertTemplateUsed(f'video_collection/about.html')
+
+        self.assertContains(response, 'discord')
+        self.assertContains(response, 'disc')
+        self.assertContains(response, 'https://www.youtube.com/watch?v=j9NZf9Wcodk')
+        # reverse('edit_project', kwargs={'project_id':4})
+        resp = self.client.post(reverse('about_video', kwargs={'video_pk': 1}), follow=True)
+        self.assertEqual(200, resp.status_code)
+        self.assertContains(resp, 'discord')
+        self.assertContains(resp, 'disc')
+        self.assertContains(resp, 'https://www.youtube.com/watch?v=j9NZf9Wcodk')
+        
+
+
+
