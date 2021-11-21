@@ -54,3 +54,11 @@ def about_video(request, video_pk):
         return render(request, 'video_collection/about.html', {'name': name, 'video_pk': video_pk, 'video': video})
     else:
         return HttpResponseForbidden()
+
+def delete_video(request, video_pk):
+    video = get_object_or_404(Video, pk=video_pk)
+    if video:
+        video.delete()
+        return redirect('video_list')
+    else:
+        return HttpResponseForbidden()
