@@ -162,6 +162,15 @@ class TestAbout(TestCase):
         self.assertContains(resp, 'discord')
         self.assertContains(resp, 'disc')
         self.assertContains(resp, 'https://www.youtube.com/watch?v=j9NZf9Wcodk')
+        video_count = Video.objects.count()
+        self.assertEqual(1, video_count)
+
+        video = Video.objects.first()
+
+        self.assertEqual('discord', video.name)
+        self.assertEqual('disc', video.notes)
+        self.assertEqual('https://www.youtube.com/watch?v=j9NZf9Wcodk', video.url)
+        self.assertEqual('j9NZf9Wcodk', video.video_id)
         
 
 
