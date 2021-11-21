@@ -176,6 +176,28 @@ class TestAbout(TestCase):
         resp = self.client.post(reverse('about_video', kwargs={'video_pk': 2000}), follow=True)
         self.assertEqual(404, resp.status_code)
 
+class TestDeleteVideo(TestCase):
+
+    def test_delete_video_button_removes_video(self):
+        about_video = {
+            'name': 'discord',
+            'url': 'https://www.youtube.com/watch?v=j9NZf9Wcodk',
+            'notes': 'disc'
+        }
+        url = reverse('add_video')
+        response = self.client.post(url, data=about_video, follow=True)
+
+        self.assertTemplateUsed(f'video_collection/about.html')
+
+        self.assertContains(response, 'discord')
+        self.assertContains(response, 'disc')
+        self.assertContains(response, 'https://www.youtube.com/watch?v=j9NZf9Wcodk')
+
+        resp = self.client.post(reverse('delete_video', kwargs={'video_pk': 1}), follow=True)
+        video_1 = Video.objects.filter(pk=1).first()
+        self.assertIsNone(video_1)
+
+
 
 
         
