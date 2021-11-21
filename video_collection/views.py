@@ -1,4 +1,5 @@
-from django.shortcuts import render, redirect
+from django.http.response import HttpResponseForbidden
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 from django.core.exceptions import ValidationError
 from django.db import IntegrityError
@@ -44,6 +45,12 @@ def video_list(request):
     # videos = Video.objects.all()
     return render(request, 'video_collection/video_list.html', {'videos': videos, 'search_form': search_form})
 
-def about_video(request):
-    name = 'naaame'
-    return render(request, 'video_collection/about.html', {'name': name})
+def about_video(request, video_pk):
+
+    video = get_object_or_404(Video, pk=video_pk)
+
+    if video:
+        name = 'naaame'
+        return render(request, 'video_collection/about.html', {'name': name, 'video_pk': video_pk, 'video': video})
+    else:
+        return HttpResponseForbidden()
