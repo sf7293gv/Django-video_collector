@@ -171,6 +171,13 @@ class TestAbout(TestCase):
         self.assertEqual('disc', video.notes)
         self.assertEqual('https://www.youtube.com/watch?v=j9NZf9Wcodk', video.url)
         self.assertEqual('j9NZf9Wcodk', video.video_id)
+    
+    def test_page_returns_404_if_video_doesnt_exist(self):
+        resp = self.client.post(reverse('about_video', kwargs={'video_pk': 2000}), follow=True)
+        self.assertEqual(404, resp.status_code)
+
+
+
         
 
 
